@@ -1,0 +1,51 @@
+@font-face{font-family:Zodiak;src:url('../fonts/Zodiak-Light.woff2') format('woff2');font-weight:300;font-style:normal;font-display:swap}
+@font-face{font-family:Zodiak;src:url('../fonts/Zodiak-LightItalic.woff2') format('woff2');font-weight:300;font-style:italic;font-display:swap}
+@font-face{font-family:Zodiak;src:url('../fonts/Zodiak-Regular.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:Switzer;src:url('../fonts/Switzer-Regular.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:Switzer;src:url('../fonts/Switzer-Medium.woff2') format('woff2');font-weight:500;font-display:swap}
+:root{
+ --basalt:#101314;--basalt-2:#1A1F21;--basalt-3:#262D30;--steam:#E9ECE8;--steam-2:#DBE0DA;--ink:#14181A;--ink-2:#465055;--snow:#F2F4F0;--snow-2:rgba(242,244,240,.72);
+ --moss:#4A5730;--aurora:#8FE3B4;--aurora-deep:#1F6B4A;--lagoon:#A9CBD3;--line:rgba(20,24,26,.18);--line-dark:rgba(242,244,240,.18);
+ --serif:Zodiak,Georgia,serif;--sans:Switzer,Arial,sans-serif;
+ --display:10vw;--h1:clamp(2.6rem,5.8vw,5.25rem);--h2:clamp(2.2rem,4.6vw,4.1rem);--h3:1.7rem;--h4:1.25rem;--body:1.02rem;--small:.875rem;--eyebrow:.7rem;--button:.78rem;
+ --s-xs:.8rem;--s-sm:1.75rem;--s-md:6rem;--s-lg:10rem;--pad:1.5rem;--gutter:1.5rem;--outer:2.5rem;--max:1600px;--measure:34em;--header:76px;--touch:44px;--sheet-w:620px;
+ --ease-house:cubic-bezier(.625,.05,0,1);--dur-ui:.7s;--dur-fast:.3s;--dur-press:.15s;--letter-delay:.012s;
+}
+@media(max-width:1023px){:root{--outer:1.25rem}}
+@media(max-width:767px){:root{--s-md:3.75rem;--s-lg:5.5rem;--header:60px;--display:15vw;--h3:1.45rem;--body:1rem}}
+*{box-sizing:border-box}
+html{color-scheme:dark;background:var(--basalt);scroll-padding-top:var(--header);-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--basalt);color:var(--snow);font-family:var(--sans);font-size:var(--body);line-height:1.55;letter-spacing:-.005em;overflow-x:clip;overscroll-behavior-x:none}
+h1,h2,h3,h4,p,figure,dl,dd,ul,ol{margin:0}ul,ol{padding:0;list-style:none}
+h1,h2,h3{font-family:var(--serif);font-weight:300}
+h1{font-size:var(--h1);line-height:1;letter-spacing:-.015em}
+h2{font-size:var(--h2);line-height:1.04;letter-spacing:-.012em}
+h3{font-size:var(--h3);font-weight:400;line-height:1.15}
+h4{font:500 var(--h4)/1.25 var(--sans)}
+em{font-family:var(--serif);font-weight:300;font-style:italic;color:var(--aurora)}
+.on-steam em{color:var(--moss)}
+p{max-width:var(--measure);text-wrap:pretty}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;cursor:pointer;background:none;padding:0}
+:where(button,input,select){appearance:none;border:0;border-radius:0}
+button,a{-webkit-tap-highlight-color:transparent}
+img{display:block;width:100%;height:100%;object-fit:cover}picture{display:block;width:100%;height:100%}
+svg{display:block}
+[hidden]{display:none!important}
+:focus-visible{outline:2px solid var(--snow);outline-offset:3px}
+.on-steam :focus-visible{outline-color:var(--ink)}
+dialog:focus{outline:none}
+::selection{background:var(--aurora);color:var(--basalt)}
+.wrap{width:calc(100% - var(--outer)*2);max-width:var(--max);margin-inline:auto}
+.on-steam{background:var(--steam);color:var(--ink)}
+.on-steam-2{background:var(--steam-2)}
+.eyebrow{font-size:var(--eyebrow);font-weight:500;letter-spacing:.18em;line-height:1.25;text-transform:uppercase}
+.small{font-size:var(--small);line-height:1.45}
+.muted{color:var(--snow-2)}.on-steam .muted{color:var(--ink-2)}
+.line{display:block;overflow:hidden;padding-block:.14em;margin-block:-.14em}.line>span,.line>em{display:block}
+.skip-link{position:fixed;top:0;left:var(--outer);z-index:100;background:var(--snow);color:var(--ink);padding:var(--s-xs);transform:translateY(-110%)}.skip-link:focus{transform:none}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+/* focus-guard.css: pairs with focus-guard.js. No ring after a tap or a click; every ring for the keyboard. */
+html[data-input="pointer"] :focus-visible:not(input):not(textarea):not(select):not([contenteditable="true"]){outline:none}
+[tabindex="-1"]:focus{outline:none}
+button,.btn-primary{touch-action:manipulation;user-select:none;-webkit-user-select:none}

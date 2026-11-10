@@ -245,3 +245,7 @@ section{position:relative}
 @media(hover:hover) and (pointer:fine){.menu-foot a:hover{color:var(--sage)}}
 @media(max-width:1023px){.menu-photo{display:none}.menu-panel nav{grid-column:1/13}.menu-panel nav a{font-size:clamp(2.3rem,min(10vw,8.5vh),3.6rem);grid-template-columns:2.6rem auto}.menu-foot p{flex-basis:100%}.menu-foot .lang{margin-left:auto}}
 @media(prefers-reduced-motion:reduce){.menu-mask,.menu-shot,.menu-shot img{transition:none}.menu-panel nav a.is-active .menu-mask{transform:none}}
+
+/* header brand: letters are separate so they can slide into the logo on scroll (M22) */
+.brand-word{display:inline-flex;white-space:pre}.brand-word i{display:inline-block;font-style:normal;will-change:transform,opacity}.brand img{will-change:transform}
+@media(max-width:1023px){.brand .brand-word{display:none}}

@@ -1,13 +1,16 @@
 import {lenis} from './lenis.js';
 let lockCount=0,savedY=0;
-function lock(){if(lockCount++===0){savedY=scrollY;lenis?.stop();Object.assign(document.body.style,{position:'fixed',top:`-${savedY}px`,width:'100%'});}}
-function unlock(){if(--lockCount===0){Object.assign(document.body.style,{position:'',top:'',width:''});window.scrollTo({top:savedY,behavior:'instant'});lenis?.start();window.dispatchEvent(new Event('overlay:closed'));}}
+// Locking pins the body, which makes the window report scroll 0. Scroll-linked motion is frozen first, so the page behind an
+// open menu or sheet (and the header logo) stays exactly as it was instead of snapping back to its top-of-page state.
+let frozen=[];
+function lock(){if(lockCount++===0){savedY=scrollY;frozen=window.ScrollTrigger?ScrollTrigger.getAll().filter(t=>t.enabled):[];frozen.forEach(t=>t.disable(false));lenis?.stop();Object.assign(document.body.style,{position:'fixed',top:`-${savedY}px`,width:'100%'});}}
+function unlock(){if(--lockCount===0){Object.assign(document.body.style,{position:'',top:'',width:''});window.scrollTo({top:savedY,behavior:'instant'});frozen.forEach(t=>t.enable(false));frozen=[];window.ScrollTrigger?.update();lenis?.start();window.dispatchEvent(new Event('overlay:closed'));}}
 // Shared semantics, focus containment, and scroll ownership. One timeline per surface.
 export function overlay({dialog,panel,trigger,closeButton,makeTimeline}){
  let timeline,opener,state='closed';
  const reduce=matchMedia('(prefers-reduced-motion: reduce)');
  const finish=()=>{if(state!=='closing')return;state='closed';dialog.close();unlock();trigger?.setAttribute('aria-expanded','false');opener?.focus({preventScroll:true});};
- function create(){timeline?.kill();gsap.set([panel,...panel.querySelectorAll('*')],{clearProps:'transform,opacity,visibility,clipPath'});timeline=makeTimeline(reduce.matches);timeline.eventCallback('onReverseComplete',finish);}
+ function create(){timeline?.kill();gsap.set([panel,...panel.querySelectorAll('*:not(.brand):not(.brand *)')],{clearProps:'transform,opacity,visibility,clipPath'});timeline=makeTimeline(reduce.matches);timeline.eventCallback('onReverseComplete',finish);}
  function open(event,prepare){
   opener=event.currentTarget||event.target;trigger?.setAttribute('aria-expanded','true');
   if(state==='closed'){prepare?.();dialog.showModal();lock();create();}

@@ -27,7 +27,7 @@ export async function initMotion(gsap,ScrollTrigger){
  function headerState(){header.classList.toggle('is-solid',!hero||hero.getBoundingClientRect().bottom<=header.offsetHeight+1);}
  addEventListener('scroll',headerState,{passive:true});headerState();
  const mm=gsap.matchMedia();let arrived=false;
- mm.add({normal:'(prefers-reduced-motion: no-preference)',reduced:'(prefers-reduced-motion: reduce)',touch:'(pointer: coarse), (hover: none)',phone:'(max-width: 767px)'},ctx=>{
+ mm.add({normal:'(prefers-reduced-motion: no-preference)',reduced:'(prefers-reduced-motion: reduce)',touch:'(pointer: coarse), (hover: none)',phone:'(max-width: 767px)',wide:'(min-width: 1024px)'},ctx=>{
   if(ctx.conditions.reduced){root.classList.remove('js');return;}
   root.classList.add('js');const {touch,phone}=ctx.conditions;
   // A timed reveal plays once. A fast pass or a keyboard focus completes it, so nothing stays hidden.
@@ -53,6 +53,19 @@ export async function initMotion(gsap,ScrollTrigger){
    // M4: reversible scrub on its own layers.
    gsap.fromTo('.hero-drift,.page-hero-drift',{yPercent:0},{yPercent:10,ease:'none',scrollTrigger:{trigger:hero,start:'top top',end:'bottom top',scrub:.6}});
    if(!touch&&document.querySelector('.wordmark-drift'))gsap.fromTo('.wordmark-drift',{y:0,opacity:1},{y:()=>-innerHeight*.1,opacity:.15,ease:'none',scrollTrigger:{trigger:hero,start:'top top',end:'bottom top',scrub:.6,invalidateOnRefresh:true}});
+  }
+  // M22 header brand: with the first 260px of scroll the wordmark's letters slide into the logo, last letter first,
+  // and the logo glides to the centre of the bar. Scrubbed, so it runs backwards on the way up. The menu's brand mirrors it.
+  if(ctx.conditions.wide){
+   const word=header.querySelector('.brand-word'),brands=[...document.querySelectorAll('.brand')];
+   const half=()=>{const b=header.querySelector('.brand');return (word.getBoundingClientRect().width+(parseFloat(getComputedStyle(b).columnGap)||0))/2;};
+   const tl=gsap.timeline({scrollTrigger:{start:0,end:260,scrub:.7,invalidateOnRefresh:true}});
+   brands.forEach(b=>{const w=b.querySelector('.brand-word'),letters=[...w.children],img=b.querySelector('img');
+    // The word is wiped away from its far end towards the logo while it drifts a few pixels the same way; each letter dims just
+    // ahead of the edge, so nothing overlaps. The logo travels to the centre over the same stretch of scroll.
+    tl.fromTo(w,{clipPath:'inset(-10% 0% -10% 0%)',x:0},{clipPath:'inset(-10% 100% -10% 0%)',x:-10,duration:1,ease:'power2.inOut'},0)
+     .to(letters,{opacity:0,duration:.3,ease:'none',stagger:{each:.035,from:'end'}},0)
+     .to(img,{x:half,duration:1,ease:'power2.inOut'},0);});
   }
   // M6 headings: authored line masks.
   document.querySelectorAll('[data-heading]').forEach(h=>reveal(h,gsap.fromTo(h.querySelectorAll('.line>*'),{yPercent:105},{yPercent:0,duration:.9,stagger:.08,ease:'house',paused:true})));
